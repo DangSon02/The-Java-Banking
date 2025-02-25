@@ -1,12 +1,16 @@
 package com.example.the_java_bank.service.impl;
 
-import com.example.the_java_bank.dto.BankResponse;
-import com.example.the_java_bank.dto.CreditRequest;
-import com.example.the_java_bank.dto.DebitRequest;
-import com.example.the_java_bank.dto.TransferRequest;
-import com.example.the_java_bank.dto.UserRequest;
+import org.springframework.security.core.userdetails.UserDetailsService;
+
+import com.example.the_java_bank.dto.RequestDTO.CreditRequest;
+import com.example.the_java_bank.dto.RequestDTO.DebitRequest;
+import com.example.the_java_bank.dto.RequestDTO.TransferRequest;
+import com.example.the_java_bank.dto.RequestDTO.UserRequest;
+import com.example.the_java_bank.dto.ResponseDTO.BankResponse;
 
 public interface UserService {
+
+    UserDetailsService userDetailsService();
 
     BankResponse creatAccount(UserRequest userRequest);
 

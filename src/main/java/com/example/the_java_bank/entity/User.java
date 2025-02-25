@@ -1,8 +1,14 @@
 package com.example.the_java_bank.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.the_java_bank.entity.BaseEntity.AbstractEntity;
 
@@ -23,7 +29,7 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(name = "tbl_users")
-public class User extends AbstractEntity<Long> {
+public class User extends AbstractEntity<Long> implements UserDetails, Serializable {
 
     @Column(name = "first_name")
     private String firstName;
@@ -52,6 +58,9 @@ public class User extends AbstractEntity<Long> {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "password")
+    private String password;
+
     @Column(name = "phone_number")
     private String phoneNumber;
 
@@ -66,5 +75,40 @@ public class User extends AbstractEntity<Long> {
 
     @OneToMany(mappedBy = "user")
     private Set<UserHasRole> userHasRoles = new HashSet<>();
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
+    public String getUsername() {
+        return "";
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
 
 }

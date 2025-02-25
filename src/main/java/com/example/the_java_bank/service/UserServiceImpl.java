@@ -3,18 +3,21 @@ package com.example.the_java_bank.service;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.the_java_bank.dto.AccountInfo;
-import com.example.the_java_bank.dto.BankResponse;
-import com.example.the_java_bank.dto.CreditRequest;
-import com.example.the_java_bank.dto.DebitRequest;
-import com.example.the_java_bank.dto.EmailDetail;
-import com.example.the_java_bank.dto.TransactionDTO;
-import com.example.the_java_bank.dto.TransferRequest;
-import com.example.the_java_bank.dto.UserRequest;
+import com.example.the_java_bank.dto.RequestDTO.AccountInfo;
+import com.example.the_java_bank.dto.RequestDTO.CreditRequest;
+import com.example.the_java_bank.dto.RequestDTO.DebitRequest;
+import com.example.the_java_bank.dto.RequestDTO.EmailDetail;
+import com.example.the_java_bank.dto.RequestDTO.TransactionDTO;
+import com.example.the_java_bank.dto.RequestDTO.TransferRequest;
+import com.example.the_java_bank.dto.RequestDTO.UserRequest;
+import com.example.the_java_bank.dto.ResponseDTO.BankResponse;
 import com.example.the_java_bank.entity.User;
 import com.example.the_java_bank.repository.UserRepository;
 import com.example.the_java_bank.service.impl.EmailService;
@@ -25,14 +28,27 @@ import com.example.the_java_bank.utils.AccountUtils;
 @Service
 public class UserServiceImpl implements UserService {
 
-        @Autowired
-        private UserRepository userRepository;
+        private final UserRepository userRepository;
 
-        @Autowired
-        private EmailService emailService;
+        private final EmailService emailService;
 
-        @Autowired
-        private TransactionService transactionService;
+        private final TransactionService transactionService;
+
+        private final PasswordEncoder passwordEncoder;
+
+        public UserServiceImpl(UserRepository userRepository, EmailService emailService,
+                        TransactionService transactionService, @Lazy PasswordEncoder passwordEncoder) {
+                this.userRepository = userRepository;
+                this.emailService = emailService;
+                this.transactionService = transactionService;
+                this.passwordEncoder = passwordEncoder;
+        }
+
+        @Override
+        public UserDetailsService userDetailsService() {
+                return email -> userRepository.findByEmail(email)
+                                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        }
 
         @Override
         public BankResponse creatAccount(UserRequest userRequest) {
@@ -60,6 +76,7 @@ public class UserServiceImpl implements UserService {
                                 .accountNumber(AccountUtils.generateAccountNumber())
                                 .accountBalance(BigDecimal.ZERO)
                                 .email(userRequest.getEmail())
+                                .password(passwordEncoder.encode(userRequest.getPassword()))
                                 .alternativePhoneNumber(userRequest.getAlternativePhoneNumber())
                                 .phoneNumber(userRequest.getPhoneNumber())
                                 .status("ACTIVE")

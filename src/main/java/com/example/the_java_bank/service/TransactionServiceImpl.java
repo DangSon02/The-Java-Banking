@@ -3,7 +3,7 @@ package com.example.the_java_bank.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.example.the_java_bank.dto.TransactionDTO;
+import com.example.the_java_bank.dto.RequestDTO.TransactionDTO;
 import com.example.the_java_bank.entity.Transaction;
 import com.example.the_java_bank.repository.TransactionRepository;
 import com.example.the_java_bank.service.impl.TransactionService;

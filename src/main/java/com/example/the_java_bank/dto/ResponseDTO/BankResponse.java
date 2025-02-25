@@ -1,4 +1,6 @@
-package com.example.the_java_bank.dto;
+package com.example.the_java_bank.dto.ResponseDTO;
+
+import com.example.the_java_bank.dto.RequestDTO.AccountInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

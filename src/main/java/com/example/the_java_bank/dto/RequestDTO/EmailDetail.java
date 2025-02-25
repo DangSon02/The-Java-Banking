@@ -1,4 +1,4 @@
-package com.example.the_java_bank.dto;
+package com.example.the_java_bank.dto.RequestDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

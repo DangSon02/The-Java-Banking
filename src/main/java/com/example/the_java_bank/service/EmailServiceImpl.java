@@ -7,7 +7,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import com.example.the_java_bank.dto.EmailDetail;
+import com.example.the_java_bank.dto.RequestDTO.EmailDetail;
 import com.example.the_java_bank.service.impl.EmailService;
 
 @Service

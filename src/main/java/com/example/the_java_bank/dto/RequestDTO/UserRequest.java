@@ -1,4 +1,4 @@
-package com.example.the_java_bank.dto;
+package com.example.the_java_bank.dto.RequestDTO;
 
 import java.math.BigDecimal;
 
@@ -30,6 +30,8 @@ public class UserRequest {
     private BigDecimal accountBalance;
 
     private String email;
+
+    private String password;
 
     private String phoneNumber;
 

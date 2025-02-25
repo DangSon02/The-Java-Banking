@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.the_java_bank.dto.BankResponse;
-import com.example.the_java_bank.dto.CreditRequest;
-import com.example.the_java_bank.dto.DebitRequest;
-import com.example.the_java_bank.dto.TransferRequest;
-import com.example.the_java_bank.dto.UserRequest;
+import com.example.the_java_bank.dto.RequestDTO.CreditRequest;
+import com.example.the_java_bank.dto.RequestDTO.DebitRequest;
+import com.example.the_java_bank.dto.RequestDTO.TransferRequest;
+import com.example.the_java_bank.dto.RequestDTO.UserRequest;
+import com.example.the_java_bank.dto.ResponseDTO.BankResponse;
 import com.example.the_java_bank.service.impl.UserService;
 
 @RestController

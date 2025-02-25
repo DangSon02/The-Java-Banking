@@ -1,4 +1,4 @@
-package com.example.the_java_bank.dto;
+package com.example.the_java_bank.dto.RequestDTO;
 
 import java.math.BigDecimal;
 
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreditRequest {
+public class DebitRequest {
 
-    private BigDecimal creditAmount;
+    private BigDecimal debitAmount;
 
 }
