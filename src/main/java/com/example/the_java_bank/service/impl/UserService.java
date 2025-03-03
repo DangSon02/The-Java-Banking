@@ -7,6 +7,7 @@ import com.example.the_java_bank.dto.RequestDTO.DebitRequest;
 import com.example.the_java_bank.dto.RequestDTO.TransferRequest;
 import com.example.the_java_bank.dto.RequestDTO.UserRequest;
 import com.example.the_java_bank.dto.ResponseDTO.BankResponse;
+import com.example.the_java_bank.entity.User;
 
 public interface UserService {
 
@@ -23,5 +24,7 @@ public interface UserService {
     BankResponse debit(String accountNumber, DebitRequest debitRequest);
 
     BankResponse transfer(TransferRequest transferRequest);
+
+    User getUserByEmail(String email);
 
 }

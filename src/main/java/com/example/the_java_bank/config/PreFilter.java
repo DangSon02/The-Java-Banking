@@ -12,6 +12,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.example.the_java_bank.service.impl.JwtService;
 import com.example.the_java_bank.service.impl.UserService;
+import com.example.the_java_bank.utils.TokenType;
 
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.FilterChain;
@@ -38,19 +39,21 @@ public class PreFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
 
-        if (StringUtils.isBlank(authHeader) || !authHeader.startsWith("Bearer")) {
+        if (StringUtils.isBlank(authHeader) || !authHeader.startsWith("Bearer ")) {
+
             filterChain.doFilter(request, response);
             return;
         }
 
         final String token = authHeader.substring("Bearer ".length());
 
-        final String userName = jwtService.extractUserName(token);
+        final String userName = jwtService.extractUserName(token, TokenType.ACCESS_TOKEN);
 
         if (StringUtils.isNotEmpty(userName) && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userService.userDetailsService().loadUserByUsername(userName);
 
-            if (jwtService.isTokenValid(token, userDetails)) {
+            if (jwtService.isTokenValid(token, TokenType.ACCESS_TOKEN, userDetails)) {
+
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());

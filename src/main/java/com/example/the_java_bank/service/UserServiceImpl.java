@@ -19,6 +19,7 @@ import com.example.the_java_bank.dto.RequestDTO.TransferRequest;
 import com.example.the_java_bank.dto.RequestDTO.UserRequest;
 import com.example.the_java_bank.dto.ResponseDTO.BankResponse;
 import com.example.the_java_bank.entity.User;
+import com.example.the_java_bank.exception.ResourceNotFoundException;
 import com.example.the_java_bank.repository.UserRepository;
 import com.example.the_java_bank.service.impl.EmailService;
 import com.example.the_java_bank.service.impl.TransactionService;
@@ -346,6 +347,12 @@ public class UserServiceImpl implements UserService {
                                 .responseMessage(AccountUtils.TRANSFER_SUCCESSFUL_MESSAGE)
                                 .accountInfo(null)
                                 .build();
+        }
+
+        @Override
+        public User getUserByEmail(String email) {
+                return userRepository.findByEmail(email)
+                                .orElseThrow(() -> new ResourceNotFoundException("Email not found"));
         }
 
 }

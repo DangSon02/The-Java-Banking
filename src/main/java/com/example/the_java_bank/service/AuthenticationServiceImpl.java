@@ -7,9 +7,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.the_java_bank.dto.RequestDTO.SignInRequest;
-import com.example.the_java_bank.dto.ResponseDTO.SignInResponse;
+import com.example.the_java_bank.dto.ResponseDTO.TokenResponse;
+import com.example.the_java_bank.exception.InvalidDataException;
 import com.example.the_java_bank.repository.UserRepository;
 import com.example.the_java_bank.service.impl.JwtService;
+import com.example.the_java_bank.service.impl.UserService;
+import com.example.the_java_bank.utils.TokenType;
+
+import io.micrometer.common.util.StringUtils;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class AuthenticationServiceImpl {
@@ -23,35 +29,55 @@ public class AuthenticationServiceImpl {
         @Autowired
         JwtService jwtService;
 
-        public SignInResponse signIn(SignInRequest signInRequest) {
+        @Autowired
+        UserService userService;
 
-                System.out.println("ok1");
-                System.out.println("email" + signInRequest.getEmail());
-                System.out.println("pass" + signInRequest.getPassword());
+        public TokenResponse signIn(SignInRequest signInRequest) {
 
                 authenticationManager.authenticate(
                                 new UsernamePasswordAuthenticationToken(signInRequest.getEmail(),
                                                 signInRequest.getPassword()));
 
-                System.out.println("ok2");
-
                 var user = userRepository.findByEmail(signInRequest.getEmail())
                                 .orElseThrow(() -> new UsernameNotFoundException(
                                                 "User name or Password are not connect"));
 
-                System.out.println("ok3");
-
                 String accessToken = jwtService.generateAccessToken(user);
                 String refreshToken = jwtService.generateRefreshToken(user);
 
-                System.out.println("ok4");
-
-                return SignInResponse.builder()
+                return TokenResponse.builder()
                                 .accessToken(accessToken)
                                 .refreshToken(refreshToken)
                                 .userId(user.getId())
                                 .build();
 
+        }
+
+        public TokenResponse refreshToken(HttpServletRequest request) {
+                final String refreshToken = request.getHeader("x-token");
+
+                if (StringUtils.isBlank(refreshToken)) {
+
+                        throw new InvalidDataException("Not allow access with this token");
+                }
+
+                // extract username;
+
+                final String email = jwtService.extractUserName(refreshToken, TokenType.REFRESH_TOKEN);
+
+                var user = userService.getUserByEmail(email);
+
+                if (!jwtService.isTokenValid(refreshToken, TokenType.REFRESH_TOKEN, user)) {
+                        throw new InvalidDataException("Not allow access with this token");
+                }
+
+                String accessToken = jwtService.generateAccessToken(user);
+
+                return TokenResponse.builder()
+                                .accessToken(accessToken)
+                                .refreshToken(refreshToken)
+                                .userId(user.getId())
+                                .build();
         }
 
 }

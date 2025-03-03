@@ -56,7 +56,7 @@ public class SecurityConfig {
     // ma hoa password
     @Bean
     public PasswordEncoder getPasswordEncoder() {
-        System.out.println("Day la Password encoder");
+
         return new BCryptPasswordEncoder();
     }
 
@@ -65,7 +65,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity)
             throws Exception {
-        System.out.println("Day la securityFilter");
+
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests.requestMatchers(WHITE_LIST).permitAll().anyRequest()
@@ -89,15 +89,13 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
             throws Exception {
-        System.out.println("Day la authenticaitonManger");
+
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     // Cho phep truy van vao database thong qua UserDeatil
     @Bean
     public AuthenticationProvider authenticationProvider() {
-
-        System.out.println("Day la authenticaitonProvider");
 
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
 

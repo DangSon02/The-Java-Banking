@@ -83,7 +83,7 @@ public class User extends AbstractEntity<Long> implements UserDetails, Serializa
 
     @Override
     public String getUsername() {
-        return "";
+        return email;
     }
 
     @Override
